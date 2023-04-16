@@ -1,5 +1,12 @@
+# Disciplina: Arquitetura e Organizacao de Computadores
+# Atividade: Avaliacao 01  Programacao em Linguagem de Montagem
+# Programa 01
+# Grupo: - Daniel Sansao Araldi
+# - Rafael Mota Alves
+
+
 .data
-	# VetorAulas inicializado com o valor 0xFFFFFFFF (1 em decimal).
+	# VetorAulas inicializado com o valor 0xFFFFFFFF (-1 em decimal).
   VetorAulas: .word 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF
 	
 	numeroAulaMensagem: .asciz "Entre com o número da aula (de 0 a 15): "
@@ -73,6 +80,8 @@
   	
   	addi t5, zero, 0
   	addi t6, zero, 1
+    add t0, zero, zero
+    la s2, VetorAulas
   	
   	verificadorPresenca:
   		# Imprime "Entre com o tipo do registro (presença = 1; ausência = 0): "
@@ -95,34 +104,6 @@
 	    jal verificadorPresenca
 	    
 	    ausencia:
-	    	addi s0, zero, 0
-	    	addi s1, zero, 32
-	    	addi s2, zero, 1
-	    	sub s3, s1, s2 
-	    	slli t4, s2, 5
-	    	
-	    	forAusencia:
-	    		bge s0, t4, endForAusencia
-	    		sub s1, s1, s2
-	    			forMascaraAusencia:
-	    				blt s3, s0, endForMascaraAusencia
-	    					slli s4, s2, 5
-	    					addi a7, zero, 1
-								add a0, zero, s4
-								ecall
-								
-	    					sub s3, s3, s2 # j--
-	    					
-	    			endForMascaraAusencia:
-	    			
-	    			addi a7, zero, 4
-      			la a0, quebraLinha
-      			ecall
-	    		
-	    			addi s0, s0, 1 # i++
-	    			
-	    			jal forAusencia
-	    	endForAusencia:
 	    endAusencia:
 	    
 	    presenca:
