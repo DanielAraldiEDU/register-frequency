@@ -10,10 +10,10 @@
 .text
 	
 	#adicionando a t5 e t6 valores relacionados as condicionais.
-  addi t5, zero, 0
-  addi t6, zero, 15
-  
 	loopInfinito:
+		addi t5, zero, 0
+  	addi t6, zero, 15
+  	
 		verificador:
 	  	addi a7, zero, 5
 	  	ecall
@@ -25,7 +25,7 @@
     	digitoInvalido:
     		# Imprime "Valor inválido, digite novamente: "
     		addi a7, zero, 4
-	    	la a0, tamanhoInvalido
+	    	la a0, valorInvalido
 	    	ecall
 	    
 	    	jal verificador
@@ -33,7 +33,6 @@
     		# Vai para digitoInvalido se o input for menor que 0 ou maior que 15.
   			blt s11, t5, digitoInvalido
 	  		bge s11, t6, digitoInvalido
-	
   	endVerificador:
   	
   	
