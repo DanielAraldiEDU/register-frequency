@@ -28,16 +28,16 @@
           jal endDigitoInvalidoAulas
     
         digitoInvalidoAulas:
-            # Imprime "Valor inválido, digite novamente: ".
-            addi a7, zero, 4
-            la a0, valorInvalido
-            ecall
+          # Imprime "Valor inválido, digite novamente: ".
+          addi a7, zero, 4
+          la a0, valorInvalido
+          ecall
         
-            jal verificadorAulas
+          jal verificadorAulas
         endDigitoInvalidoAulas:
-            # Pula para a label digitoInvalido se valor informado for menor que 0 ou maior e igual a 16.
-              blt s11, t5, digitoInvalidoAulas
-              bge s11, t6, digitoInvalidoAulas
+          # Pula para a label digitoInvalido se valor informado for menor que 0 ou maior e igual a 16.
+          blt s0, t5, digitoInvalidoAulas
+          bge s0, t6, digitoInvalidoAulas
       endVerificadorAulas:
   	
   	addi t5, zero, 0
@@ -65,21 +65,11 @@
 	    	jal verificadorAlunos
     	endDigitoInvalidoAlunos:
     		# Vai para digitoInvalido se o valor inserido for menor que 0 ou maior que 31.
-  			blt s11, t5, digitoInvalidoAlunos
-	  		bge s11, t6, digitoInvalidoAlunos
+  			blt s1, t5, digitoInvalidoAlunos
+	  		bge s1, t6, digitoInvalidoAlunos
   	endVerificadorAlunos:
-  		
+
   	
-  
-		# Imprime "Entre com o número da aula (de 0 a 15): "
-		#addi a7, zero, 4
-		#la a0, numeroAulaMensagem 
-  	#ecall
-  	
-  	# Imprime "Entre com o número do aluno (de 0 a 31): "
-  	#addi a7, zero, 4
-		#la a0, numeroAlunoMensagem 
-  	#ecall
   	
   	# Imprime "Entre com o tipo do registro (presença = 1; ausência = 0): "
   	#addi a7, zero, 4
