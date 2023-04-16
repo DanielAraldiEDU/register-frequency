@@ -5,6 +5,8 @@
 	numeroAulaMensagem: .asciz "Entre com o número da aula (de 0 a 15): "
   numeroAlunoMensagem: .asciz "Entre com o número do aluno (de 0 a 31): "
   registroMensagem: .asciz "Entre com o tipo do registro (presença = 1; ausência = 0): "
+  
+  quebraLinha: .asciz "\n"
 	
 	valorInvalido: .asciz "Valor inválido, digite novamente: "
 	
@@ -12,39 +14,39 @@
 	
 	# Adicionando a t5 e t6 valores relacionados as condicionais.
 	loopInfinito:
-        addi t5, zero, 0
-      	addi t6, zero, 16
+    addi t5, zero, 0
+    addi t6, zero, 16
      
-        verificadorAulas:
-        	addi a7, zero, 4
-          la a0, numeroAulaMensagem
-          ecall
+    verificadorAulas:
+     	addi a7, zero, 4
+      la a0, numeroAulaMensagem
+      ecall
           
-          addi a7, zero, 5
-          ecall
+      addi a7, zero, 5
+      ecall
       
-          add s0, zero, a0
+      add s0, zero, a0
       
-          jal endDigitoInvalidoAulas
+      jal endDigitoInvalidoAulas
     
-        digitoInvalidoAulas:
-          # Imprime "Valor inválido, digite novamente: ".
-          addi a7, zero, 4
-          la a0, valorInvalido
-          ecall
+      digitoInvalidoAulas:
+        # Imprime "Valor inválido, digite novamente: ".
+        addi a7, zero, 4
+        la a0, valorInvalido
+        ecall
         
-          jal verificadorAulas
-        endDigitoInvalidoAulas:
-          # Pula para a label digitoInvalido se valor informado for menor que 0 ou maior e igual a 16.
-          blt s0, t5, digitoInvalidoAulas
-          bge s0, t6, digitoInvalidoAulas
-      endVerificadorAulas:
+        jal verificadorAulas
+      endDigitoInvalidoAulas:
+        # Pula para a label digitoInvalido se valor informado for menor que 0 ou maior e igual a 16.
+        blt s0, t5, digitoInvalidoAulas
+        bge s0, t6, digitoInvalidoAulas
+    endVerificadorAulas:
   	
   	addi t5, zero, 0
   	addi t6, zero, 32
   	
   	verificadorAlunos:
-  		
+  	
   		addi a7, zero, 4
       la a0, numeroAlunoMensagem
       ecall
@@ -93,17 +95,39 @@
 	    jal verificadorPresenca
 	    
 	    ausencia:
+	    	addi s0, zero, 0
+	    	addi s1, zero, 32
+	    	addi s2, zero, 1
+	    	sub s3, s1, s2 
+	    	slli t4, s2, 5
 	    	
+	    	forAusencia:
+	    		bge s0, t4, endForAusencia
+	    		sub s1, s1, s2
+	    			forMascaraAusencia:
+	    				blt s3, s0, endForMascaraAusencia
+	    					slli s4, s2, 5
+	    					addi a7, zero, 1
+								add a0, zero, s4
+								ecall
+								
+	    					sub s3, s3, s2 # j--
+	    					
+	    			endForMascaraAusencia:
+	    			
+	    			addi a7, zero, 4
+      			la a0, quebraLinha
+      			ecall
+	    		
+	    			addi s0, s0, 1 # i++
+	    			
+	    			jal forAusencia
+	    	endForAusencia:
 	    endAusencia:
 	    
 	    presenca:
 	    endPresenca:
+	    
   	endVerificadorPresenca:
-  	
-  	
-
   
   	jal loopInfinito
-	
-		
-	
