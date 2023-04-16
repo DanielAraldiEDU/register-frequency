@@ -1,56 +1,92 @@
 .data
-	VetorAulas: .word 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+	# VetorAulas inicializado com o valor 0xFFFFFFFF (1 em decimal).
+  VetorAulas: .word 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF
 	
-	textoA: .asciz "Entre com o número da aula (de 0 a 15): "
-	textoB: .asciz "Entre com o número do aluno (de 0 a 31): "
-	textoC: .asciz "Entre com o tipo do registro (presença = 1; ausência = 0): "
+	numeroAulaMensagem: .asciz "Entre com o número da aula (de 0 a 15): "
+  numeroAlunoMensagem: .asciz "Entre com o número do aluno (de 0 a 31): "
+  registroMensagem: .asciz "Entre com o tipo do registro (presença = 1; ausência = 0): "
 	
 	valorInvalido: .asciz "Valor inválido, digite novamente: "
 	
 .text
 	
-	#adicionando a t5 e t6 valores relacionados as condicionais.
+	# Adicionando a t5 e t6 valores relacionados as condicionais.
 	loopInfinito:
-		addi t5, zero, 0
-  	addi t6, zero, 15
+        addi t5, zero, 0
+      	addi t6, zero, 16
+     
+        verificadorAulas:
+        	addi a7, zero, 4
+          la a0, numeroAulaMensagem
+          ecall
+          
+          addi a7, zero, 5
+          ecall
+      
+          add s0, zero, a0
+      
+          jal endDigitoInvalidoAulas
+    
+        digitoInvalidoAulas:
+            # Imprime "Valor inválido, digite novamente: ".
+            addi a7, zero, 4
+            la a0, valorInvalido
+            ecall
+        
+            jal verificadorAulas
+        endDigitoInvalidoAulas:
+            # Pula para a label digitoInvalido se valor informado for menor que 0 ou maior e igual a 16.
+              blt s11, t5, digitoInvalidoAulas
+              bge s11, t6, digitoInvalidoAulas
+      endVerificadorAulas:
   	
-		verificador:
+  	addi t5, zero, 0
+  	addi t6, zero, 32
+  	
+  	verificadorAlunos:
+  		
+  		addi a7, zero, 4
+      la a0, numeroAlunoMensagem
+      ecall
+      
 	  	addi a7, zero, 5
 	  	ecall
 	  
-	  	add s11, zero, a0
+	  	add s1, zero, a0
 	  
-	  	jal endDigitoInvalido
+	  	jal endDigitoInvalidoAlunos
     
-    	digitoInvalido:
+    	digitoInvalidoAlunos:
     		# Imprime "Valor inválido, digite novamente: "
     		addi a7, zero, 4
 	    	la a0, valorInvalido
 	    	ecall
 	    
-	    	jal verificador
-    	endDigitoInvalido:
-    		# Vai para digitoInvalido se o input for menor que 0 ou maior que 15.
-  			blt s11, t5, digitoInvalido
-	  		bge s11, t6, digitoInvalido
-  	endVerificador:
+	    	jal verificadorAlunos
+    	endDigitoInvalidoAlunos:
+    		# Vai para digitoInvalido se o valor inserido for menor que 0 ou maior que 31.
+  			blt s11, t5, digitoInvalidoAlunos
+	  		bge s11, t6, digitoInvalidoAlunos
+  	endVerificadorAlunos:
+  		
   	
-  	
-  	
+  
 		# Imprime "Entre com o número da aula (de 0 a 15): "
-		addi a7, zero, 4
-		la a0, textoA 
-  	ecall
+		#addi a7, zero, 4
+		#la a0, numeroAulaMensagem 
+  	#ecall
   	
   	# Imprime "Entre com o número do aluno (de 0 a 31): "
-  	addi a7, zero, 4
-		la a0, textoB 
-  	ecall
+  	#addi a7, zero, 4
+		#la a0, numeroAlunoMensagem 
+  	#ecall
   	
   	# Imprime "Entre com o tipo do registro (presença = 1; ausência = 0): "
-  	addi a7, zero, 4
-		la a0, textoC
-  	ecall
+  	#addi a7, zero, 4
+		#la a0, registroMensagem
+  	#ecall
+  
+  	jal loopInfinito
 	
 		
 	
