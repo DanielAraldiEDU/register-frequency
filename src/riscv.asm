@@ -68,13 +68,40 @@
   			blt s1, t5, digitoInvalidoAlunos
 	  		bge s1, t6, digitoInvalidoAlunos
   	endVerificadorAlunos:
+  	
+  	addi t5, zero, 0
+  	addi t6, zero, 1
+  	
+  	verificadorPresenca:
+  		# Imprime "Entre com o tipo do registro (presença = 1; ausência = 0): "
+  		addi a7, zero, 4
+			la a0, registroMensagem
+  		ecall
+  		
+  		addi a7, zero, 5
+	  	ecall
+	  	
+	  	add s2, zero, a0
+  		
+  		beq s2, t5, ausencia
+  		beq s2, t6, presenca
+  		
+  		addi a7, zero, 4
+	    la a0, valorInvalido
+	    ecall
+	    
+	    jal verificadorPresenca
+	    
+	    ausencia:
+	    	
+	    endAusencia:
+	    
+	    presenca:
+	    endPresenca:
+  	endVerificadorPresenca:
+  	
+  	
 
-  	
-  	
-  	# Imprime "Entre com o tipo do registro (presença = 1; ausência = 0): "
-  	#addi a7, zero, 4
-		#la a0, registroMensagem
-  	#ecall
   
   	jal loopInfinito
 	
