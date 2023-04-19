@@ -140,7 +140,7 @@
 						add s3, s2, t3
 						lw a0, 0(s3)
 						
-						xori s4, a0, -1
+						addi s4, a0, 1
 						
 						slli t3, s1, 2
 						add s3, s2, t3
