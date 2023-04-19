@@ -7,7 +7,7 @@
 
 .data
 	# VetorAulas inicializado com o valor 0xFFFFFFFF (-1 em decimal).
-  VetorAulas: .word 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF
+  VetorAulas: .word 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF
 	
 	numeroAulaMensagem: .asciz "Entre com o número da aula (de 0 a 15): "
   numeroAlunoMensagem: .asciz "Entre com o número do aluno (de 0 a 31): "
@@ -16,6 +16,7 @@
   quebraLinha: .asciz "\n"
 	
 	valorInvalido: .asciz "Valor inválido, digite novamente: "
+	valorRegistroInvalido: .asciz "Valor de registro inválido, digite novamente\n"
 	
 .text
 	
@@ -78,9 +79,9 @@
 	  		bge s1, t6, digitoInvalidoAlunos
   	endVerificadorAlunos:
   	
+  	addi t4, zero, 32
   	addi t5, zero, 0
   	addi t6, zero, 1
-    add t0, zero, zero
     la s2, VetorAulas
   	
   	verificadorPresenca:
@@ -92,23 +93,85 @@
   		addi a7, zero, 5
 	  	ecall
 	  	
-	  	add s2, zero, a0
+	  	add s3, zero, a0
   		
-  		beq s2, t5, ausencia
-  		beq s2, t6, presenca
+  		beq s3, t5, ausencia
+  		beq s3, t6, presenca
   		
   		addi a7, zero, 4
-	    la a0, valorInvalido
+	    la a0, valorRegistroInvalido
 	    ecall
 	    
 	    jal verificadorPresenca
 	    
 	    ausencia:
+	    	bge t5, t4, endAusencia
+	    		beq t5, s1, marcaAusencia
+	    		
+	    		jal endMarcaAusencia
+	    		
+		    	marcaAusencia: 
+		    		slli t3, s1, 2
+						add s3, s2, t3
+						lw a0, 0(s3)
+						
+						andi s4, a0, 1
+						
+						slli t3, s1, 2
+						add s3, s2, t3
+						sw s4, 0(s3)
+					endMarcaAusencia: 
+					
+	    		addi t5, t5, 1
+	    		
+	    		jal ausencia
 	    endAusencia:
 	    
+	    addi t5, zero, 0
+	    
 	    presenca:
+	    	bge t5, t4, endPresenca
+	    		beq t5, s1, marcaPresenca
+	    		
+	    		jal endMarcaPresenca
+	    		
+		    	marcaPresenca: 
+		    		slli t3, s1, 2
+						add s3, s2, t3
+						lw a0, 0(s3)
+						
+						xori s4, a0, -1
+						
+						slli t3, s1, 2
+						add s3, s2, t3
+						sw s4, 0(s3)
+					endMarcaPresenca: 
+					
+	    		addi t5, t5, 1
+	    		
+	    		jal presenca
 	    endPresenca:
 	    
   	endVerificadorPresenca:
+  	
+  	addi t5, zero, 0
+  	
+  	showForB: 
+		bge t5, t4, endShowForB
+			addi a7, zero, 4
+			la a0, quebraLinha
+			ecall
+			
+			slli t1, t5, 2
+			add s3, s2, t1
+			lw a0, 0(s3)
+			
+			addi a7, zero, 1
+			ecall 
+			
+			addi t5, t5, 1
+		
+			jal showForB
+	endShowForB:
   
   	jal loopInfinito
