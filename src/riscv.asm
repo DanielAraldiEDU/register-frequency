@@ -6,8 +6,9 @@
 
 
 .data
-	# VetorAulas inicializado com o valor 0xFFFFFFFF (-1 em decimal).
-  VetorAulas: .word 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF
+	# vetorAulas inicializado com o valor 0xFFFFFFFF (32 em decimal).
+  vetorAulas: .word 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF
+  vetorAlunos: .word 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 	
 	numeroAulaMensagem: .asciz "Entre com o número da aula (de 0 a 15): "
   numeroAlunoMensagem: .asciz "Entre com o número do aluno (de 0 a 31): "
@@ -79,10 +80,11 @@
 	  		bge s1, t6, digitoInvalidoAlunos
   	endVerificadorAlunos:
   	
-  	addi t4, zero, 32
+  	addi t4, zero, 16
   	addi t5, zero, 0
   	addi t6, zero, 1
-    la s2, VetorAulas
+    la s2, vetorAulas
+    la s6, vetorAlunos
   	
   	verificadorPresenca:
   		# Imprime "Entre com o tipo do registro (presença = 1; ausência = 0): "
@@ -110,12 +112,23 @@
 	    		
 	    		jal endMarcaAusencia
 	    		
-		    	marcaAusencia: 
-		    		slli t3, s1, 2
+		    	marcaAusencia:
+						slli t3, s1, 2
+						add s3, s6, t3
+						lw a0, 0(s3)
+						
+						add t1, zero, a0
+						
+						slli t3, s0, 2
 						add s3, s2, t3
 						lw a0, 0(s3)
 						
-						andi s4, a0, 1
+						sll s4, t1, s1
+						xori s4, s4, -1
+						
+						add a0, zero, s4
+						addi a7, zero, 1
+						ecall
 						
 						slli t3, s1, 2
 						add s3, s2, t3
@@ -140,7 +153,7 @@
 						add s3, s2, t3
 						lw a0, 0(s3)
 						
-						addi s4, a0, 1
+						xor s4, a0, s1
 						
 						slli t3, s1, 2
 						add s3, s2, t3
@@ -156,22 +169,22 @@
   	
   	addi t5, zero, 0
   	
-  	showForB: 
-		bge t5, t4, endShowForB
-			addi a7, zero, 4
-			la a0, quebraLinha
-			ecall
+  	printFor: 
+			bge t5, t4, endPrintFor
+				addi a7, zero, 4
+				la a0, quebraLinha
+				ecall
+				
+				slli t1, t5, 2
+				add s3, s2, t1
+				lw a0, 0(s3)
+				
+				addi a7, zero, 1
+				ecall 
+				
+				addi t5, t5, 1
 			
-			slli t1, t5, 2
-			add s3, s2, t1
-			lw a0, 0(s3)
-			
-			addi a7, zero, 1
-			ecall 
-			
-			addi t5, t5, 1
-		
-			jal showForB
-	endShowForB:
+				jal printFor
+		endPrintFor:
   
   	jal loopInfinito
